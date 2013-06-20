@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <parent>
+        <groupId>ro.fortsoft.log2j</groupId>
+        <artifactId>log2j-parent</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>log2j-demo</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>    
+    <name>Log2j Demo</name>
+
+    <build>
+	    <plugins>
+	        <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                    <finalName>demo</finalName>
+                    <archive>
+                        <manifest>
+                            <mainClass>ro.fortsoft.log2j.demo.Log2jDemo</mainClass>
+			            </manifest>
+			         </archive>
+			         <descriptorRefs>
+			             <descriptorRef>jar-with-dependencies</descriptorRef>
+			         </descriptorRefs>
+		         </configuration>
+		         <executions>
+		             <execution>
+		                 <id>make-assembly</id> <!-- this is used for inheritance merges -->
+		                 <phase>package</phase> <!-- bind to the packaging phase -->
+		                 <goals>
+		                     <goal>single</goal>
+		                 </goals>
+		             </execution>
+		         </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>ro.fortsoft.log2j</groupId>
+            <artifactId>log2j</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
