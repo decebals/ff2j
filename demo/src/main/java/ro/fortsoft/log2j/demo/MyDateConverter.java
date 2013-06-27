@@ -26,7 +26,7 @@ public class MyDateConverter implements Converter<Date> {
 	@Override
 	public Date convert(String text) {
 		try {
-			return new SimpleDateFormat("yyyy/MM/dd").parse(text);
+			return new SimpleDateFormat("yyyy/MM/dd hh:mm:ss").parse(text);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

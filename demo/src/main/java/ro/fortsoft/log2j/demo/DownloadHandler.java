@@ -19,10 +19,23 @@ import ro.fortsoft.log2j.EntityHandler;
  */
 public class DownloadHandler implements EntityHandler<Download> {
 
+	private int count;
+	
+	@Override
+	public void beforeFirstEntity() {
+		count = 0;
+	}
+
 	@Override
 	public void handleEntity(Download entity) {
+		count++;
 		// only display the entity 
-		System.out.println(entity);
+		System.out.println(entity);		
+	}
+
+	@Override
+	public void afterLastEntity() {
+		System.out.println("Handled " + count + " Download entities");
 	}
 
 }

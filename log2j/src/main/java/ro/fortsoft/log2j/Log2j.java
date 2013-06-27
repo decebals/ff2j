@@ -16,7 +16,7 @@ import java.io.BufferedReader;
 import java.io.Reader;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public class Log2j {
 	
 	public Log2j() {
 		mapper = new Mapper();
-		entityHandlers = new HashSet<EntityHandler<?>>();
+		entityHandlers = new LinkedHashSet<EntityHandler<?>>();
 	}
 	
     public int getSkipLines() {
@@ -91,13 +91,14 @@ public class Log2j {
      *
      * @param input will not be closed by the reader
      */
-    public void parse(Reader input) throws Exception {    	    	
-//    	System.out.println("Log2j.parse()");
-    	// !!! verifica ca ai mapat ceva si ca ai handlere de entitati
-    	// !!! verifica ca nu ai handlere care trateaza tipuri de entitati neexistente
+    public void parse(Reader input) throws Exception {
+    	// pre parse
     	createEntityHandlersCache();
+    	for (EntityHandler<?> entityHandler : entityHandlers) {
+    		entityHandler.beforeFirstEntity();
+    	}
     	
-//    	System.out.println("read&parse file");
+    	// parse
         BufferedReader reader = new BufferedReader(input);
         String lineText = null;
         int lineNumber = 0;
@@ -107,6 +108,11 @@ public class Log2j {
         		onLogLine(lineNumber, lineText);
         	}
         }        
+        
+        // post parse
+    	for (EntityHandler<?> entityHandler : entityHandlers) {
+    		entityHandler.afterLastEntity();
+    	}
 	}
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -114,7 +120,9 @@ public class Log2j {
     	Object entity = mapper.mapEntity(lineText);
     	if (entity != null) {
     		EntityHandler entityHandler = entityHandlersCache.get(entity.getClass());
-    		entityHandler.handleEntity(entity);    		
+    		if (entityHandler != null) {
+    			entityHandler.handleEntity(entity);
+    		}
     	}
     }
 

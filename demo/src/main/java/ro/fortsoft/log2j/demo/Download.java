@@ -26,50 +26,30 @@ public class Download {
 
 	// [webapp 2008/10/06 16:12:16] - 192.168.12.124, /download/next-reports-setup-1.7-jre.exe, f13dfc7fe609480297a0b15d611676b4	
 	public static final String PATTERN = "\\[webapp\\s"
-		+ "(20[0-1][0-9]/\\d{2}/\\d{2})" // date
-		+ "\\s"
-		+ "(\\d{2}:\\d{2}:\\d{2})" // time
-		+ "\\]\\s-\\s<\\$>\\s"
-		+ "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})" // ip
-		+ ",\\s/download/"
-		+ "([^,]*)" // file 
-		+ ".*";
+			+ "(20[0-1][0-9]/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2})" // date
+			+ "\\]\\s-\\s<\\$>\\s"
+			+ "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})" // ip
+			+ ",\\s/download/"
+			+ "([^,]*)" // file 
+			+ ".*";
 
-	private static final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy"); // only used in toString()
+	private static final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss"); // only used in toString()
 	
 	@RegexField(group = 1, converter = MyDateConverter.class)
 	private Date date;
 	
 	@RegexField(group = 2)
-	private String time;
-	
-	@RegexField(group = 3)
 	private String ip;
 	
-	@RegexField(group = 4)
+	@RegexField(group = 3)
 	private String file;
 	
-	// other properties
-	private String session;
-	private String country;
-	private String city;
-	private String agent;
-	private String referer;
-
 	public Date getDate() {
 		return date;
 	}
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
 	}
 
 	public String getIp() {
@@ -88,55 +68,13 @@ public class Download {
 		this.file = file;
 	}
 
-	public String getSession() {
-		return session;
-	}
-
-	public void setSession(String session) {
-		this.session = session;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getAgent() {
-		return agent;
-	}
-
-	public void setAgent(String agent) {
-		this.agent = agent;
-	}
-
-	public String getReferer() {
-		return referer;
-	}
-
-	public void setReferer(String referer) {
-		this.referer = referer;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("date = " + format.format(date));
-		sb.append(",");
-		sb.append("time = " + time);
-		sb.append(",");
+		sb.append(", ");
 		sb.append("ip = " + ip);
-		sb.append(",");
+		sb.append(", ");
 		sb.append("file = " + file);
 		
 		return sb.toString();

@@ -23,16 +23,18 @@ import ro.fortsoft.log2j.Log2j;
 public class Log2jDemo {
 
 	public static void main(String[] args) {
-		String file = "winstone.log";
-		
-		InputStream input = Log2jDemo.class.getResourceAsStream("/winstone.log");
+		String resourceName = "/winstone.log";
+		InputStream input = Log2jDemo.class.getResourceAsStream(resourceName);
 		try {
 			// store de start time
 			long time = System.currentTimeMillis();
-			System.out.println("Parsing file " + file + "...");
+			System.out.println("Parsing " + Log2jDemo.class.getResource(resourceName) + "...");
 			
 			// the important line
-			new Log2j().map(Download.class).addEntityHandler(new DownloadHandler()).parse(new InputStreamReader(input));
+			new Log2j()
+				.map(Download.class)
+				.addEntityHandler(new DownloadHandler())
+				.parse(new InputStreamReader(input));
 			
 			// display of parse time
 			time = System.currentTimeMillis() - time;

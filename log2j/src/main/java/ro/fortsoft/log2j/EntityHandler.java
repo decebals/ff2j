@@ -17,6 +17,16 @@ package ro.fortsoft.log2j;
  */
 public interface EntityHandler<T> {
 	
+	/**
+	 * Log2j will call this method at the start of log parsing.
+	 */
+	public void beforeFirstEntity();
+	
 	public void handleEntity(T entity);
 
+	/**
+	 * Log2j will call this method at the end of log parsing.
+	 */
+	public void afterLastEntity();
+	
 }
