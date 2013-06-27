@@ -4,7 +4,7 @@ Simple log file to java objects converter using annotation.
 
 Features/Benefits
 -------------------
-With Log2j you can easily convert/transform a log file in a collections of java objects. 
+With Log2j you can easily convert/transform a log file in a collection of java objects. 
 Log2j is an open source (Apache license) lightweight (around 15KB) log file to POJOs converter, with zero dependencies and a quick learning curve.
 
 No XML, only Java.
