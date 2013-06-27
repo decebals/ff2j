@@ -2,12 +2,20 @@ Log2j
 =====================
 Simple log file to java objects converter using annotation.
 
+Features/Benefits
+-------------------
+With Log2j you can easily convert/transform a log file in a collections of java objects. 
+Log2j is an open source (Apache license) lightweight (around 15KB) log file to POJOs converter, with zero dependencies and a quick learning curve.
+
+No XML, only Java.
+
 Components
 -------------------
 - **RegexEntity** is an annotation that can be added on any POJO.
 - **RegexField** is an annotation that can be added on any field of classes annotated with RegexEntity.
 - **Converter** is an interface implemented by all converters, that convert a text (String) in a typed value.
-- **EntityHandler** is an interface to be implemented for processing entities.
+- **EntityHandler** is an interface to be implemented for processing entities. For example you can write a DownloadHandler that writes
+all download objects in a database.
 
 Artifacts
 -------------------
@@ -52,35 +60,24 @@ For this reason I created a simple _POJO_ class with the name `Download` having 
     public class Download {
     
     	// [webapp 2008/10/06 16:12:16] - 192.168.12.124, /download/next-reports-setup-1.7-jre.exe, f13dfc7fe609480297a0b15d611676b4	
-    	public static final String PATTERN = "\\[webapp\\s"
-    		+ "(20[0-1][0-9]/\\d{2}/\\d{2})" // date
-    		+ "\\s"
-    		+ "(\\d{2}:\\d{2}:\\d{2})" // time
-    		+ "\\]\\s-\\s<\\$>\\s"
-    		+ "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})" // ip
-    		+ ",\\s/download/"
-    		+ "([^,]*)" // file 
-    		+ ".*";
+   		public static final String PATTERN = "\\[webapp\\s"
+			+ "(20[0-1][0-9]/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2})" // date
+			+ "\\]\\s-\\s<\\$>\\s"
+			+ "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})" // ip
+			+ ",\\s/download/"
+			+ "([^,]*)" // file 
+			+ ".*";
+
     
     	@RegexField(group = 1, converter = MyDateConverter.class)
     	private Date date;
-    
-    	@RegexField(group = 2)
-    	private String time;
-    
+        
     	@RegexField(group = 3)
     	private String ip;
     
     	@RegexField(group = 4)
     	private String file;
-    
-    	// other properties
-    	private String session;
-    	private String country;
-    	private String city;
-    	private String agent;
-    	private String referer;
-    
+  
     	// getters and setters
     	
     }
@@ -98,15 +95,31 @@ The third step is to create a `DownloadHandler` for handling `Download` objects.
  
     public class DownloadHandler implements EntityHandler<Download> {
     
-    	@Override
-    	public void handleEntity(Download entity) {
-    		// only display the entity 
-    		System.out.println(entity);
-    	}
+	    private int count;
+	
+	    @Override
+	    public void beforeFirstEntity() {
+		    count = 0;
+	    }
+
+	    @Override
+	    public void handleEntity(Download entity) {
+		    count++;
+		    // only display the entity 
+		    System.out.println(entity);		
+	    }
+
+	    @Override
+	    public void afterLastEntity() {
+		    System.out.println("Handled " + count + " Download entities");
+	    }
     
     }
 
-In the example above my `DownloadHandler` only prints all download objects to _System.out_.
+The methods beforeFirstEntity() and afterLastEntity() are callback methods. Log2j will call these methods one time at the start/end of log parsing.
+For example you can start a database transaction, clear an entity table in beforeFirstEntity() and commit the database transaction in afterLastEntity().
+
+In the example above my `DownloadHandler` init count variable to zero in beforeFirstEntity(), prints all download objects to _System.out_ in handleEntity() and prints a count with download entities in afterLastEntity().
 
 Converters
 ----------------
@@ -132,6 +145,67 @@ a converter only for a particular field.
     }
 
 For example `MyDateConverter` is used in `Download` class by Log2j to transform the text fragment in _Date_ object.
+If you want to use MyDateConverter for all POJO fields with type Date you can do it with:
+    
+    new Log2j()
+        ...
+        registerConverter(new MyDateConverter();
+
+Validations
+----------------
+
+You can easily add validation in your EntityHandler using java [Bean Validation](http://beanvalidation.org/1.0/spec/) (JSR 303).
+With some annotation you can have an validated object in handleEntity().
+
+    @RegexEntity(pattern = "PATTERN")
+    public class Download {
+
+        ...
+	
+	    @RegexField(group = 1, converter = MyDateConverter.class)
+	    @NotNull
+	    private Date date;
+	
+	    @RegexField(group = 2)
+	    @NotNull
+	    private String ip;
+	
+	    @RegexField(group = 3)
+	    @NotNull
+	    private String file;
+
+        ...
+
+    }
+
+In above snippet I want date, ip and file should be not null. For this reason I added @javax.validation.constraints.NotNull on these fields.
+
+To validate entities I modified a little bit the handleEntity method of DownloadHandler class.
+
+    public class DownloadHandler implements EntityHandler<Download> {
+
+        private Validator validator;
+
+        public DownloadHandler() {
+            validator = new Validator(new AnnotationsConfigurer(), new BeanValidationAnnotationsConfigurer());
+        }
+
+   		@Override
+		public void handleEntity(Download entity) {
+			// check for validation
+			List<ConstraintViolation> violations = validator.validate(entity);
+			if (violations.size() > 0) {
+				System.out.println("Entity \"" + entity.getClass().getSimpleName() + " - " + entity + "\" is invalid");
+				System.out.println("Violations: " + violations);
+				return;
+			}
+
+            ...
+        }
+			
+    }
+ 
+For downloads validation I used [OVal](http://oval.sourceforge.net/) as implementation of Bean Validation specifications. I choose OVal because it is lightweight (around 300K) and come with no dependencies (for my requirements). 
 
 Demo
 -------------------
