@@ -82,7 +82,7 @@ For this reason I created a simple _POJO_ class with the name `Download` having 
     	
     }
 
-I added annotation **@RegexEntity**(pattern = "PATTERN") to class `Download`. The **@Regex** annotation may have a parameter
+I added annotation **@RegexEntity**(pattern = "PATTERN") to class `Download`. The **@RegexEntity** annotation may have a parameter
 named pattern which represents the constant name that returns the regex string. The default value is **PATTERN** (in `Download` class 
 I added pattern value for transparency).
 This annotation is informing Log2j that all log's lines that respect the pattern will be transformed in Download objects.
@@ -215,6 +215,10 @@ To run the demo application use:
     mvn
     java -jar demo/target/demo-jar-with-dependencies.jar
 
+Mailing list
+--------------
+
+Much of the conversation between developers and users is managed through [mailing list] (http://groups.google.com/group/log2j).
 
 License
 --------------
