@@ -20,6 +20,7 @@ all download objects in a database.
 Artifacts
 -------------------
 - Log2j `log2j` (jar)
+- Log2j Validation (jar)
 - Log2j Demo `log2j-demo` (executable jar)
 
 Using Maven
@@ -154,8 +155,22 @@ If you want to use MyDateConverter for all POJO fields with type Date you can do
 Validations
 ----------------
 
-You can easily add validation in your EntityHandler using java [Bean Validation](http://beanvalidation.org/1.0/spec/) (JSR 303).
-With some annotation you can have an validated object in handleEntity().
+It's extremely simple to add validation support on the entity handler. For this purpose you can use log2j-validation module.   
+Log2j Validation come with ValidEntityHandler class and two little dependencies: [Bean Validation](http://beanvalidation.org/1.0/spec/) (JSR 303) and [OVal](http://oval.sourceforge.net/). I choose OVal because it's lightweight (around 300K) and come with no dependencies. 
+
+In your pom.xml you must define the dependency to Log2j Validation artifact with:
+
+```xml
+<dependency>
+    <groupId>ro.fortsoft.log2j</groupId>
+    <artifactId>log2j-validation</artifactId>
+    <version>${log2j.version}</version>
+</dependency>    
+```
+
+where ${log2j.version} is the last log2j version.
+
+Validation is supported by constraints in the form of annotations placed on a field, method, or class of a POJO.
 
     @RegexEntity(pattern = "PATTERN")
     public class Download {
@@ -180,32 +195,25 @@ With some annotation you can have an validated object in handleEntity().
 
 In above snippet I want date, ip and file should be not null. For this reason I added @javax.validation.constraints.NotNull on these fields.
 
-To validate entities I modified a little bit the handleEntity method of DownloadHandler class.
+To validate entities you can use the ValidEntityHandler class.
 
-    public class DownloadHandler implements EntityHandler<Download> {
-
-        private Validator validator;
-
-        public DownloadHandler() {
-            validator = new Validator(new AnnotationsConfigurer(), new BeanValidationAnnotationsConfigurer());
-        }
+    public class DownloadHandler implements ValidEntityHandler<Download> {
 
    		@Override
-		public void handleEntity(Download entity) {
-			// check for validation
-			List<ConstraintViolation> violations = validator.validate(entity);
-			if (violations.size() > 0) {
-				System.out.println("Entity \"" + entity.getClass().getSimpleName() + " - " + entity + "\" is invalid");
-				System.out.println("Violations: " + violations);
-				return;
-			}
-
-            ...
+		public void handleValidEntity(Download entity) {
+            // do something
         }
-			
+
+        @Override
+        public void handleInvalidEntity(Download entity, List<ConstraintViolation> violations) {
+            // do something
+        }
+
     }
- 
-For downloads validation I used [OVal](http://oval.sourceforge.net/) as implementation of Bean Validation specifications. I choose OVal because it is lightweight (around 300K) and come with no dependencies (for my requirements). 
+
+If the entity is valid than method handleValidEntity() is called else method handleInvalidEntity() is called.
+
+That it's all about validations :)
 
 Demo
 -------------------
