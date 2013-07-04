@@ -109,6 +109,7 @@
     
     <modules>
         <module>log2j</module>
+        <module>log2j-validation</module>
         <module>demo</module>
     </modules>
 
