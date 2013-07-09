@@ -1,11 +1,11 @@
-Log2j
+Flat File to Java (FF2J)
 =====================
-Simple log file to java objects converter using annotation.
+Simple flat file to java objects converter using annotation.
 
 Features/Benefits
 -------------------
-With Log2j you can easily convert/transform a log file in a collection of java objects. 
-Log2j is an open source (Apache license) tiny (around 15KB) log file to POJOs converter, with zero dependencies and a quick learning curve.
+With FF2J you can easily convert/transform a flat file in a collection of java objects. 
+FF2J is an open source (Apache license) tiny (around 15KB) flat file to POJOs converter, with zero dependencies and a quick learning curve.
 
 No XML, only Java.
 
@@ -19,31 +19,31 @@ all download objects in a database.
 
 Artifacts
 -------------------
-- Log2j `log2j` (jar)
-- Log2j Validation (jar)
-- Log2j Demo `log2j-demo` (executable jar)
+- FF2J `ff2j` (jar)
+- FF2J Validation  `ff2j-validation` (jar)
+- FF2J Demo `ff2j-demo` (executable jar)
 
 Using Maven
 -------------------
-In your pom.xml you must define the dependencies to Log2j artifacts with:
+In your pom.xml you must define the dependencies to FF2J artifacts with:
 
 ```xml
 <dependency>
-    <groupId>ro.fortsoft.log2j</groupId>
-    <artifactId>log2j</artifactId>
-    <version>${log2j.version}</version>
+    <groupId>ro.fortsoft.ff2j</groupId>
+    <artifactId>ff2j</artifactId>
+    <version>${ff2j.version}</version>
 </dependency>    
 ```
 
-where ${log2j.version} is the last log2j version.
+where ${ff2j.version} is the last ff2j version.
 
-You may want to check for the latest released version using [Maven Search](http://search.maven.org/#search%7Cga%7C1%7Clog2j)
+You may want to check for the latest released version using [Maven Search](http://search.maven.org/#search%7Cga%7C1%7Cff2j)
 
 How to use
 -------------------
-You can convert a log's lines in java objects with a single line:
+You can convert a flat file's lines in java objects with a single line:
 
-    new Log2j()
+    new FF2J()
 		.map(Download.class)
 		.addEntityHandler(new DownloadHandler())
 		.parse(new InputStreamReader(input));
@@ -86,11 +86,11 @@ For this reason I created a simple _POJO_ class with the name `Download` having 
 I added annotation **@RegexEntity**(pattern = "PATTERN") to class `Download`. The **@RegexEntity** annotation may have a parameter
 named pattern which represents the constant name that returns the regex string. The default value is **PATTERN** (in `Download` class 
 I added pattern value for transparency).
-This annotation is informing Log2j that all log's lines that respect the pattern will be transformed in Download objects.
+This annotation is informing FF2J that all flat file's lines that respect the pattern will be transformed in Download objects.
 
-The second step is to specify how Log2j will transform text fragments from log's lines in `Download`'s properties.
+The second step is to specify how FF2J will transform text fragments from flat file's lines in `Download`'s properties.
 For this purpose I used **@RegexField** annotation. This annotation takes a mandatory parameter named group that represents the group index from 
-the java's regex Matcher object and an optional parameter named converter that will be used by Log2j to convert the text fragment in property's value.
+the java's regex Matcher object and an optional parameter named converter that will be used by FF2J to convert the text fragment in property's value.
 
 The third step is to create a `DownloadHandler` for handling `Download` objects.
  
@@ -117,7 +117,7 @@ The third step is to create a `DownloadHandler` for handling `Download` objects.
     
     }
 
-The methods beforeFirstEntity() and afterLastEntity() are callback methods. Log2j will call these methods one time at the start/end of log parsing.
+The methods beforeFirstEntity() and afterLastEntity() are callback methods. FF2J will call these methods one time at the start/end of flat file parsing.
 For example you can start a database transaction, clear an entity table in beforeFirstEntity() and commit the database transaction in afterLastEntity().
 
 In the example above my `DownloadHandler` init count variable to zero in beforeFirstEntity(), prints all download objects to _System.out_ in handleEntity() and prints a count with download entities in afterLastEntity().
@@ -125,9 +125,9 @@ In the example above my `DownloadHandler` init count variable to zero in beforeF
 Converters
 ----------------
 
-A **Converter** is used by Log2j to transform a text fragment into a POJO property's value.  
-Log2j comes with builtin converters for all primitive values ( _Boolean_, _Byte_, _Short_, ...).  
-Log2j also allows you to register new general converters (for each field's type) or you can register
+A **Converter** is used by FF2J to transform a text fragment into a POJO property's value.  
+FF2J comes with builtin converters for all primitive values ( _Boolean_, _Byte_, _Short_, ...).  
+FF2J also allows you to register new general converters (for each field's type) or you can register
 a converter only for a particular field.
 
     public class MyDateConverter implements Converter<Date> {
@@ -145,30 +145,30 @@ a converter only for a particular field.
     
     }
 
-For example `MyDateConverter` is used in `Download` class by Log2j to transform the text fragment in _Date_ object.
+For example `MyDateConverter` is used in `Download` class by FF2J to transform the text fragment in _Date_ object.
 If you want to use MyDateConverter for all POJO fields with type Date you can do it with:
     
-    new Log2j()
+    new FF2J()
         ...
         registerConverter(new MyDateConverter();
 
 Validations
 ----------------
 
-It's extremely simple to add validation support on the entity handler. For this purpose you can use log2j-validation module.   
-Log2j Validation come with ValidEntityHandler class and two little dependencies: [Bean Validation](http://beanvalidation.org/1.0/spec/) (JSR 303) and [OVal](http://oval.sourceforge.net/). I choose OVal because it's lightweight (around 300K) and come with no dependencies. 
+It's extremely simple to add validation support on the entity handler. For this purpose you can use ff2j-validation module.   
+FF2J Validation come with ValidEntityHandler class and two little dependencies: [Bean Validation](http://beanvalidation.org/1.0/spec/) (JSR 303) and [OVal](http://oval.sourceforge.net/). I choose OVal because it's lightweight (around 300K) and come with no dependencies. 
 
-In your pom.xml you must define the dependency to Log2j Validation artifact with:
+In your pom.xml you must define the dependency to FF2J Validation artifact with:
 
 ```xml
 <dependency>
-    <groupId>ro.fortsoft.log2j</groupId>
-    <artifactId>log2j-validation</artifactId>
-    <version>${log2j.version}</version>
+    <groupId>ro.fortsoft.ff2j</groupId>
+    <artifactId>ff2j-validation</artifactId>
+    <version>${ff2j.version}</version>
 </dependency>    
 ```
 
-where ${log2j.version} is the last log2j version.
+where ${ff2j.version} is the last ff2j version.
 
 Validation is supported by constraints in the form of annotations placed on a field, method, or class of a POJO.
 
@@ -226,7 +226,7 @@ To run the demo application use:
 Mailing list
 --------------
 
-Much of the conversation between developers and users is managed through [mailing list] (http://groups.google.com/group/log2j).
+Much of the conversation between developers and users is managed through [mailing list] (http://groups.google.com/group/ff2j).
 
 License
 --------------

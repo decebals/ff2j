@@ -2,16 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     
     <parent>
-        <groupId>ro.fortsoft.log2j</groupId>
-        <artifactId>log2j-parent</artifactId>
+        <groupId>ro.fortsoft.ff2j</groupId>
+        <artifactId>ff2j-parent</artifactId>
         <version>0.5-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>log2j-demo</artifactId>
+    <artifactId>ff2j-demo</artifactId>
     <version>0.5-SNAPSHOT</version>
     <packaging>jar</packaging>    
-    <name>Log2j Demo</name>
+    <name>FF2J Demo</name>
 
     <build>
 	    <plugins>
@@ -21,7 +21,7 @@
                     <finalName>demo</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>ro.fortsoft.log2j.demo.Log2jDemo</mainClass>
+                            <mainClass>ro.fortsoft.ff2j.demo.FF2JDemo</mainClass>
 			            </manifest>
 			         </archive>
 			         <descriptorRefs>
@@ -43,8 +43,8 @@
     
     <dependencies>
         <dependency>
-            <groupId>ro.fortsoft.log2j</groupId>
-            <artifactId>log2j</artifactId>
+            <groupId>ro.fortsoft.ff2j</groupId>
+            <artifactId>ff2j</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
