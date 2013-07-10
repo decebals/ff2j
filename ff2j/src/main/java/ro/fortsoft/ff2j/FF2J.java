@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -177,7 +178,7 @@ public class FF2J {
     	Map<Class<?>, Long> entitiesCounter;
     	
     	public Statistics() {
-    		entitiesCounter = new HashMap<Class<?>, Long>();
+    		entitiesCounter = new LinkedHashMap<Class<?>, Long>();
     	}
     	
 		public long getStartLineNumber() {
