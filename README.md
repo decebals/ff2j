@@ -114,14 +114,14 @@ the java's regex Matcher object and an optional parameter named converter that w
 
 The third step is to create a `DownloadHandler` for handling `Download` objects.
  
-    public class DownloadHandler implements AbstractEntityHandler<Download> {
-    
+    public class DownloadHandler extends AbstractEntityHandler<Download> {
+
 	    @Override
 	    public void handleEntity(Download entity) {
-		    // only display the entity 
+		    // only display the entity to System.out
 		    System.out.println(entity);		
 	    }
-    
+
     }
 
 where AbstractEntityHandler is a simple EntityHandler that does nothing in beforeFirstEntity() and afterLastEntity().
