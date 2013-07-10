@@ -18,6 +18,7 @@ Components
 - **Converter** is an interface implemented by all converters, that convert a text (String) in a typed value.
 - **EntityHandler** is an interface to be implemented for processing entities. For example you can write a DownloadHandler that writes
 all download objects in a database.
+- **AbstractEntityHandler** is a simple EntityHandler that does nothing in beforeFirstEntity() and afterLastEntity().
 
 Artifacts
 -------------------
@@ -45,10 +46,25 @@ How to use
 -------------------
 You can convert a flat file's lines in java objects with a single line:
 
-    new FF2J()
+	// the important line
+	FF2J.Statistics statistics = new FF2J()
 		.map(Download.class)
 		.addEntityHandler(new DownloadHandler())
+		.skipLines(5)
 		.parse(new InputStreamReader(input));
+
+	// display some statistics
+	System.out.println(statistics);
+
+On a big (45MB) log file I retrieves this statistics:
+
+    Parsing file:/stuff/work/ff2j/demo/target/classes/winstone-2-big.log...
+    FF2J Statistics:
+	    startLineNumber = 1000
+	    endLineNumber = 865628
+	    elapsedTime = 1759ms
+	    entitiesCounter = {class ro.fortsoft.ff2j.demo.Download=26402}
+
 
 And now the story :)
 		
@@ -96,33 +112,32 @@ the java's regex Matcher object and an optional parameter named converter that w
 
 The third step is to create a `DownloadHandler` for handling `Download` objects.
  
-    public class DownloadHandler implements EntityHandler<Download> {
+    public class DownloadHandler implements AbstractEntityHandler<Download> {
     
-	    private int count;
-	
-	    @Override
-	    public void beforeFirstEntity() {
-		    count = 0;
-	    }
-
 	    @Override
 	    public void handleEntity(Download entity) {
-		    count++;
 		    // only display the entity 
 		    System.out.println(entity);		
-	    }
-
-	    @Override
-	    public void afterLastEntity() {
-		    System.out.println("Handled " + count + " Download entities");
 	    }
     
     }
 
+where AbstractEntityHandler is a simple EntityHandler that does nothing in beforeFirstEntity() and afterLastEntity().
+
+The signature for the EntityHandler interface is:
+
+    public interface EntityHandler<T> {
+	
+	    public void beforeFirstEntity();
+	
+	    public void handleEntity(T entity);
+
+	    public void afterLastEntity();
+	
+    }
+
 The methods beforeFirstEntity() and afterLastEntity() are callback methods. FF2J will call these methods one time at the start/end of flat file parsing.
 For example you can start a database transaction, clear an entity table in beforeFirstEntity() and commit the database transaction in afterLastEntity().
-
-In the example above my `DownloadHandler` init count variable to zero in beforeFirstEntity(), prints all download objects to _System.out_ in handleEntity() and prints a count with download entities in afterLastEntity().
 
 Converters
 ----------------
