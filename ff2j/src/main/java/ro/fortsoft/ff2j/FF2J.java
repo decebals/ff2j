@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import ro.fortsoft.ff2j.converter.Converter;
 import ro.fortsoft.ff2j.converter.ConverterRegistry;
@@ -200,16 +201,36 @@ public class FF2J {
 			return entitiesCounter;
 		}
 
+		/**
+		 * Returns elapsed miliseconds as sting in format HH:mm:ss.SSS.
+		 * 
+		 * @return
+		 */
+		public String getElapsedTimeString() {
+			long timeInMillis = getElapsedTime();
+			
+			// format millis			
+			long hours = TimeUnit.MILLISECONDS.toHours(timeInMillis);
+			timeInMillis -= TimeUnit.HOURS.toMillis(hours);
+			long minutes = TimeUnit.MILLISECONDS.toMinutes(timeInMillis);
+			timeInMillis -= TimeUnit.MINUTES.toMillis(minutes);
+			long seconds = TimeUnit.MILLISECONDS.toSeconds(timeInMillis);
+			timeInMillis -= TimeUnit.SECONDS.toMillis(seconds);
+			 
+			// HH:mm:ss.SSS
+			return String.format("%d:%d:%d.%d", hours, minutes, seconds, timeInMillis);	
+		}
+		
 		@Override
 		public String toString() {
 			StringBuffer sb = new StringBuffer("FF2J Statistics:\n");
 			sb.append("\t" + "startLineNumber = " + getStartLineNumber() + "\n");
 			sb.append("\t" + "endLineNumber = " + getEndLineNumber() + "\n");
-			sb.append("\t" + "elapsedTime = " + getElapsedTime() + "ms" + "\n");
+			sb.append("\t" + "elapsedTime = " + getElapsedTimeString() + "\n");
 			sb.append("\t" + "entitiesCounter = " + getEntitiesCounter());
 			
 			return sb.toString();
-		}
+		}		
 		
 		void incrementCounter(Class<?> enityClass) {
 			Long counter = entitiesCounter.get(enityClass);
@@ -220,6 +241,7 @@ public class FF2J {
 			}
 			entitiesCounter.put(enityClass, counter);
 		}
+		
     }
     
 }
