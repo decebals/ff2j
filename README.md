@@ -19,6 +19,8 @@ Components
 - **EntityHandler** is an interface to be implemented for processing entities. For example you can write a DownloadHandler that writes
 all download objects in a database.
 - **AbstractEntityHandler** is a simple EntityHandler that does nothing in beforeFirstEntity() and afterLastEntity().
+- **FF2J** is the main class.
+- **FF2J.Statistics** is a holder class for FF2J's statistics.
 
 Artifacts
 -------------------

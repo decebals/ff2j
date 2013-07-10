@@ -163,7 +163,7 @@ public class FF2J {
     }
     
     /**
-     * An holder class for FF2J's statistics.
+     * A holder class for FF2J's statistics.
      */
     public class Statistics implements Serializable {
     	

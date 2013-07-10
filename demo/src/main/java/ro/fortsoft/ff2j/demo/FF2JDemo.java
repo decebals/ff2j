@@ -30,9 +30,9 @@ public class FF2JDemo {
 			
 			// the important line
 			FF2J.Statistics statistics = new FF2J()
-				.skipLines(5)
 				.map(Download.class)
 				.addEntityHandler(new DownloadHandler())
+				.skipLines(5)
 				.parse(new InputStreamReader(input));
 			
 			// display some statistics
