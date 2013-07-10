@@ -64,9 +64,10 @@ On a big (45MB) log file I retrieves this statistics:
     FF2J Statistics:
 	    startLineNumber = 1000
 	    endLineNumber = 865628
-	    elapsedTime = 1759ms
+        elapsedTime = 0:0:1.719
 	    entitiesCounter = {class ro.fortsoft.ff2j.demo.Download=26402}
 
+where elapsedTime is formated as HH:mm:ss.SSS
 
 And now the story :)
 		
