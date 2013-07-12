@@ -69,6 +69,8 @@ On a big (45MB) log file I retrieves this statistics:
 
 where elapsedTime is formated as HH:mm:ss.SSS
 
+You can save endLineNumber in a file or in a database and on next running you can initiate skipLines with that value.
+
 And now the story :)
 		
 Scenario: I have a `DownloadServlet` that for each download request writes in the container's log a line in the format
@@ -145,24 +147,18 @@ For example you can start a database transaction, clear an entity table in befor
 Converters
 ----------------
 
-A **Converter** is used by FF2J to transform a text fragment into a POJO property's value.  
-FF2J comes with builtin converters for all primitive values ( _Boolean_, _Byte_, _Short_, ...).  
+A **Converter** is used by FF2J to transform a text fragment into a POJO property's value. If conversion cannot be performed successfully 
+than throw a ConversionException (extends RuntimeException).
+FF2J comes with builtin converters for all primitive values ( _Boolean_, _Byte_, _Short_, ...) and Date.  
 FF2J also allows you to register new general converters (for each field's type) or you can register
 a converter only for a particular field.
 
-    public class MyDateConverter implements Converter<Date> {
-    
-    	@Override
-    	public Date convert(String text) {
-    		try {
-    			return new SimpleDateFormat("yyyy/MM/dd").parse(text);
-    		} catch (ParseException e) {
-    			e.printStackTrace();
-    		}
-    
-    		return null;
-    	}
-    
+    public class MyDateConverter extends DateConverter {
+
+	    public MyDateConverter() {
+		    super("yyyy/MM/dd hh:mm:ss");
+	    }
+	
     }
 
 For example `MyDateConverter` is used in `Download` class by FF2J to transform the text fragment in _Date_ object.
