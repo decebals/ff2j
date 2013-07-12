@@ -12,26 +12,15 @@
  */
 package ro.fortsoft.ff2j.demo;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import ro.fortsoft.ff2j.converter.Converter;
+import ro.fortsoft.ff2j.converter.DateConverter;
 
 /**
  * @author Decebal Suiu
  */
-public class MyDateConverter implements Converter<Date> {
+public class MyDateConverter extends DateConverter {
 
-	@Override
-	public Date decode(String text) {
-		try {
-			return new SimpleDateFormat("yyyy/MM/dd hh:mm:ss").parse(text);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+	public MyDateConverter() {
+		super("yyyy/MM/dd hh:mm:ss");
 	}
-
+	
 }

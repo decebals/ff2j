@@ -15,7 +15,7 @@ package ro.fortsoft.ff2j.converter;
 import ro.fortsoft.ff2j.RegexField;
 
 /**
- * Marker interface for RegexField.converter default value.
+ * Marker interface for @RegexField.converter default value.
  * 
  * @see RegexField
  * @author Decebal Suiu

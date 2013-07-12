@@ -42,6 +42,7 @@ public class ConverterRegistry {
         register(new LongConverter());
         register(new FloatConverter());
         register(new DoubleConverter());
+        register(new DateConverter());
     }
 
     /**
