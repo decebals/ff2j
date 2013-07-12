@@ -24,7 +24,7 @@ import ro.fortsoft.ff2j.converter.Converter;
 public class MyDateConverter implements Converter<Date> {
 
 	@Override
-	public Date convert(String text) {
+	public Date decode(String text) {
 		try {
 			return new SimpleDateFormat("yyyy/MM/dd hh:mm:ss").parse(text);
 		} catch (ParseException e) {

@@ -18,8 +18,12 @@ package ro.fortsoft.ff2j.converter;
 public class IntegerConverter implements Converter<Integer> {
 
 	@Override
-	public Integer convert(String text) {
-		return Integer.valueOf(text);
+	public Integer decode(String text) {
+		try {
+			return Integer.valueOf(text);
+		} catch (NumberFormatException e) {
+			throw new ConversionException(e);
+		}
 	}
 
 }

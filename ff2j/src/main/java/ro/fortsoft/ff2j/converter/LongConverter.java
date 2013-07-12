@@ -18,8 +18,12 @@ package ro.fortsoft.ff2j.converter;
 public class LongConverter implements Converter<Long> {
 
 	@Override
-	public Long convert(String text) {
-		return Long.valueOf(text);
+	public Long decode(String text) {
+		try {
+			return Long.valueOf(text);
+		} catch (NumberFormatException e) {
+			throw new ConversionException(e);
+		}
 	}
 
 }

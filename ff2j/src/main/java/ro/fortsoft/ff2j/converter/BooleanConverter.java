@@ -17,9 +17,31 @@ package ro.fortsoft.ff2j.converter;
  */
 public class BooleanConverter implements Converter<Boolean> {
 
+    public static final BooleanConverter TRUE_FALSE = new BooleanConverter("true", "false", false);
+    public static final BooleanConverter YES_NO = new BooleanConverter("yes", "no", false);
+    public static final BooleanConverter BINARY = new BooleanConverter("1", "0", true);
+
+    private String positive;
+    private String negative;
+    private boolean caseSensitive;
+
+    public BooleanConverter() {
+        this("true", "false", false);
+    }
+
+    public BooleanConverter(String positive, String negative, boolean caseSensitive) {
+        this.positive = positive;
+        this.negative = negative;
+        this.caseSensitive = caseSensitive;
+    }
+    
 	@Override
-	public Boolean convert(String text) {
-		return Boolean.valueOf(text);
+	public Boolean decode(String text) {
+		if (caseSensitive) {
+            return positive.equals(text) ? Boolean.TRUE : Boolean.FALSE;
+        } else {
+            return positive.equalsIgnoreCase(text) ? Boolean.TRUE : Boolean.FALSE;
+        }
 	}
 
 }

@@ -24,7 +24,7 @@ public class ConverterUtils {
             throw new RuntimeException("No converter found for target class " + toClass);
         }
 
-        return converter.convert(text);
+        return converter.decode(text);
 	}
 	
 }

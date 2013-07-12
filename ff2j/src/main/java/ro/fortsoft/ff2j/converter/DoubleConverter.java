@@ -18,8 +18,12 @@ package ro.fortsoft.ff2j.converter;
 public class DoubleConverter implements Converter<Double> {
 
 	@Override
-	public Double convert(String text) {
-		return Double.valueOf(text);
+	public Double decode(String text) {
+		try {
+			return Double.parseDouble(text);
+		} catch (NumberFormatException e) {
+			throw new ConversionException(e);
+		}
 	}
 
 }

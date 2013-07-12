@@ -18,8 +18,12 @@ package ro.fortsoft.ff2j.converter;
 public class FloatConverter implements Converter<Float> {
 
 	@Override
-	public Float convert(String text) {
-		return Float.valueOf(text);
+	public Float decode(String text) {
+		try {
+			return Float.valueOf(text);
+		} catch (NumberFormatException e) {
+			throw new ConversionException(e);
+		}
 	}
 
 }

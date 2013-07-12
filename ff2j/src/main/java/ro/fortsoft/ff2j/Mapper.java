@@ -91,7 +91,7 @@ class Mapper {
 			if (DefaultConverter.class.equals(converter)) {
 				value = ConverterUtils.convert(text, field.getType());
 			} else {
-				value = converter.newInstance().convert(text);
+				value = converter.newInstance().decode(text);
 			}
 			field.set(target, value);
 		}

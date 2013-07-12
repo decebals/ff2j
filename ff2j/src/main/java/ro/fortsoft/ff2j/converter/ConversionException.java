@@ -13,22 +13,30 @@
 package ro.fortsoft.ff2j.converter;
 
 /**
- * A converter allows you to transform a string into an object (decoding).
- * 
+ * Converter's exception. Thrown when a problem occurs during the 
+ * decoding of some object.
+ *
+ * @see Converter
  * @author Decebal Suiu
  */
-public interface Converter<T> {
+public class ConversionException extends RuntimeException {
 
-	/**
-	 * Transform a text value into an object. When reading a text file,
-     * it can be interesting to perform some operations on some field value. This
-     * method can be used to perform such work.
-     *
-     * @param text
-     *            the value to decode
-     * @return an object built from the given value
-     * @throws ConvertionException if conversion cannot be performed successfully	
-     */
-    public T decode(String text);
-	
+	private static final long serialVersionUID = 1L;
+
+	public ConversionException() {
+		super();
+	}
+
+	public ConversionException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public ConversionException(String message) {
+		super(message);
+	}
+
+	public ConversionException(Throwable cause) {
+		super(cause);
+	}
+
 }

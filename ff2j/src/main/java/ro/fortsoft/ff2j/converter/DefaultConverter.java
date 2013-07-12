@@ -16,8 +16,8 @@ import ro.fortsoft.ff2j.RegexField;
 
 /**
  * Marker interface for RegexField.converter default value.
- * @see RegexField
  * 
+ * @see RegexField
  * @author Decebal Suiu
  */
 public interface DefaultConverter extends Converter<Void> {

@@ -18,8 +18,12 @@ package ro.fortsoft.ff2j.converter;
 public class ShortConverter implements Converter<Short> {
 
 	@Override
-	public Short convert(String text) {
-		return Short.valueOf(text);
+	public Short decode(String text) {
+		try {
+			return Short.valueOf(text);
+		} catch (NumberFormatException e) {
+			throw new ConversionException(e);
+		}
 	}
 
 }

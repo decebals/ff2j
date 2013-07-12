@@ -18,8 +18,12 @@ package ro.fortsoft.ff2j.converter;
 public class ByteConverter implements Converter<Byte> {
 
 	@Override
-	public Byte convert(String text) {
-		return Byte.valueOf(text);
+	public Byte decode(String text) {
+		try {
+			return Byte.valueOf(text);
+		} catch (NumberFormatException e) {
+			throw new ConversionException(e);
+		}
 	}
 
 }
