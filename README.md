@@ -4,7 +4,7 @@ Simple flat file to java objects converter using annotations.
 
 Features/Benefits
 -------------------
-With FF2J you can easily convert/transform a flat file in a collection of java objects. 
+With FF2J you can easily convert/transform a plain text flat file in a collection of java objects. 
 FF2J is an open source (Apache license) tiny (around 15KB) flat file to POJOs converter, with zero dependencies and a quick learning curve.
 
 No XML, only Java.
