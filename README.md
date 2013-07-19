@@ -1,6 +1,6 @@
 Flat File to Java (FF2J)
 =====================
-Simple flat file to java objects converter using annotations.
+Simple plain text flat file to java objects converter using annotations.
 
 Features/Benefits
 -------------------
