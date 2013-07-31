@@ -2,6 +2,8 @@ Flat File to Java (FF2J)
 =====================
 Simple plain text flat file to java objects converter using annotations.
 
+Current build status: [![Build Status](https://buildhive.cloudbees.com/job/decebals/job/ff2j/badge/icon)](https://buildhive.cloudbees.com/job/decebals/job/ff2j/)
+
 Features/Benefits
 -------------------
 With FF2J you can easily convert/transform a plain text flat file in a collection of java objects. 
