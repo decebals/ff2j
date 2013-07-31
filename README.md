@@ -19,6 +19,7 @@ Components
 - **EntityHandler** is an interface to be implemented for processing entities. For example you can write a DownloadHandler that writes
 all download objects in a database.
 - **AbstractEntityHandler** is a simple EntityHandler that does nothing in beforeFirstEntity() and afterLastEntity().
+- **NoEntityHandler** is an interface to be implemented for processing no entity line.
 - **FF2J** is the main class.
 - **FF2J.Statistics** is a holder class for FF2J's statistics.
 
@@ -146,7 +147,6 @@ For example you can start a database transaction, clear an entity table in befor
 
 Converters
 ----------------
-
 A **Converter** is used by FF2J to transform a text fragment into a POJO property's value. If conversion cannot be performed successfully 
 than throw a ConversionException (extends RuntimeException).
 FF2J comes with builtin converters for all primitive values ( _Boolean_, _Byte_, _Short_, ...) and Date.  
@@ -170,7 +170,6 @@ If you want to use MyDateConverter for all POJO fields with type Date you can do
 
 Validations
 ----------------
-
 It's extremely simple to add validation support on the entity handler. For this purpose you can use ff2j-validation module.   
 FF2J Validation come with ValidEntityHandler class and two little dependencies: [Bean Validation](http://beanvalidation.org/1.0/spec/) (JSR 303) and [OVal](http://oval.sourceforge.net/). I choose OVal because it's lightweight (around 300K) and come with no dependencies. 
 
@@ -231,6 +230,10 @@ If the entity is valid than method handleValidEntity() is called else method han
 
 That it's all about validations :)
 
+Import scenario
+-------------------
+A friend of mine tell me that he uses FF2J to import entities from a csv file in his application (spring with hibernate). He decorate him entity with few FF2J annotations and implement a NoEntityHadler to summarize what it is wrong in the csv file. He is happy because he can use the same hibernate entities with validation support to import from csv files.
+
 Demo
 -------------------
 I have a tiny demo application that parse a log file produced by winstone (http://winstone.sourceforge.net/). The demo application is in demo package.
@@ -241,7 +244,6 @@ To run the demo application use:
 
 Mailing list
 --------------
-
 Much of the conversation between developers and users is managed through [mailing list] (http://groups.google.com/group/ff2j).
 
 License

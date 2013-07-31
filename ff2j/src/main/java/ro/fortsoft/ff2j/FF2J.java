@@ -35,6 +35,7 @@ public class FF2J {
     private long skipLines;
 	private Mapper mapper;
 	private Set<EntityHandler<?>> entityHandlers;
+	private NoEntityHandler noEntityHandler;
 	private Map<Class<?>, EntityHandler<?>> entityHandlersCache;
 	private Statistics statistics;
 	
@@ -86,6 +87,12 @@ public class FF2J {
 		return this;
 	}
 	
+	public FF2J setNoEntityHandler(NoEntityHandler noEntityHandler) {
+		this.noEntityHandler = noEntityHandler;
+		
+		return this;
+	}
+
 	/**
 	 * Register a custome general converter.
 	 * 
@@ -111,11 +118,6 @@ public class FF2J {
     	}
     	statistics.startTime = System.currentTimeMillis();
     			
-    			// display of parse time
-//    			time = System.currentTimeMillis() - time;
-//    			System.out.println("Parse in " + time + " ms");
-
-    	
     	// parse
         BufferedReader reader = new BufferedReader(input);
         String lineText = null;
@@ -123,7 +125,10 @@ public class FF2J {
         while ((lineText = reader.readLine()) != null) {
         	lineNumber++;
         	if (lineNumber > skipLines) {
-        		onFileLine(lineNumber, lineText);
+        		boolean stop = onFileLine(lineNumber, lineText);
+        		if (stop) {
+        			break;
+        		}
         	}
         }
         
@@ -138,7 +143,7 @@ public class FF2J {
 	}
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	private void onFileLine(long lineNumber, String lineText) throws Exception {
+	private boolean onFileLine(long lineNumber, String lineText) throws Exception {
     	Object entity = mapper.mapEntity(lineText);
     	if (entity != null) {
     		EntityHandler entityHandler = entityHandlersCache.get(entity.getClass());
@@ -146,7 +151,11 @@ public class FF2J {
     			entityHandler.handleEntity(entity);
     			statistics.incrementCounter(entity.getClass());
     		}
+    	} else if (noEntityHandler != null) {
+    		return noEntityHandler.handleNoEntity(lineNumber, lineText);
     	}
+    	
+    	return true;
     }
 
     private void createEntityHandlersCache() {
