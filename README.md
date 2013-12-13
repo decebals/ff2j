@@ -232,6 +232,10 @@ If the entity is valid than method handleValidEntity() is called else method han
 
 That it's all about validations :)
 
+Regex test
+-------------------
+You can test your regular expressions online using [RegexPlanet](http://www.regexplanet.com/advanced/java/index.html).
+
 Import scenario
 -------------------
 A friend of mine tell me that he uses FF2J to import entities from a csv file in his application (spring with hibernate). He decorate him entity with few FF2J annotations and implement a NoEntityHadler to summarize what it is wrong in the csv file. He is happy because he can use the same hibernate entities with validation support to import from csv files.
