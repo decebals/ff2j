@@ -152,10 +152,12 @@ Also, FF2J comes with two nice optional feature:
 - `NoEntityHandler` is used to Handle no entity (file) lines. You can stop the parsing procees if `handleNoEntity` method returns false.
 - `ProgressListener` represents a listener for the observation of the parsing process. You can stop the parsing procees if `inProgress` method returns false.
 
- new FF2J()
-        ...
-        .setNoEntityHandler(new MyNoEntityHandler())
-        .setProgressListener(new MyProgressListener());
+You can add these options with:
+
+	 new FF2J()
+		...
+	    .setNoEntityHandler(new MyNoEntityHandler())
+	    .setProgressListener(new MyProgressListener());
 
 Converters
 ----------------
