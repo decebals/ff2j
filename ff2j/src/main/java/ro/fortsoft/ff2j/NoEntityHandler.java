@@ -22,7 +22,7 @@ public interface NoEntityHandler {
 	 * 
 	 * @param lineNumber
 	 * @param lineText
-	 * @return true if you want to stop the parsing process
+	 * @return true if you want to continue the parsing process
 	 */
 	public boolean handleNoEntity(long lineNumber, String lineText);
 	

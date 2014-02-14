@@ -22,6 +22,7 @@ Components
 all download objects in a database.
 - **AbstractEntityHandler** is a simple EntityHandler that does nothing in beforeFirstEntity() and afterLastEntity().
 - **NoEntityHandler** is an interface to be implemented for processing no entity line.
+- **ProgressListener** is a listener for the observation of the parsing process.
 - **FF2J** is the main class.
 - **FF2J.Statistics** is a holder class for FF2J's statistics.
 
@@ -147,6 +148,15 @@ The signature for the EntityHandler interface is:
 The methods beforeFirstEntity() and afterLastEntity() are callback methods. FF2J will call these methods one time at the start/end of flat file parsing.
 For example you can start a database transaction, clear an entity table in beforeFirstEntity() and commit the database transaction in afterLastEntity().
 
+Also, FF2J comes with two nice optional feature:
+- `NoEntityHandler` is used to Handle no entity (file) lines. You can stop the parsing procees if `handleNoEntity` method returns false.
+- `ProgressListener` represents a listener for the observation of the parsing process. You can stop the parsing procees if `inProgress` method returns false.
+
+ new FF2J()
+        ...
+        .setNoEntityHandler(new MyNoEntityHandler())
+        .setProgressListener(new MyProgressListener());
+
 Converters
 ----------------
 A **Converter** is used by FF2J to transform a text fragment into a POJO property's value. If conversion cannot be performed successfully 
@@ -168,7 +178,7 @@ If you want to use MyDateConverter for all POJO fields with type Date you can do
     
     new FF2J()
         ...
-        registerConverter(new MyDateConverter();
+        .registerConverter(new MyDateConverter();
 
 Validations
 ----------------

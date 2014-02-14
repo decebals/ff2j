@@ -36,8 +36,10 @@ public class FF2J {
 	private Mapper mapper;
 	private Set<EntityHandler<?>> entityHandlers;
 	private NoEntityHandler noEntityHandler;
+	private ProgressListener progressListener;
 	private Map<Class<?>, EntityHandler<?>> entityHandlersCache;
 	private Statistics statistics;
+	private Exception error;
 	
 	public FF2J() {
 		mapper = new Mapper();
@@ -93,8 +95,14 @@ public class FF2J {
 		return this;
 	}
 
+	public FF2J setProgressListener(ProgressListener progressListener) {
+		this.progressListener = progressListener;
+		
+		return this;
+	}
+
 	/**
-	 * Register a custome general converter.
+	 * Register a custom general converter.
 	 * 
 	 * @param converter
 	 * @return
@@ -105,31 +113,53 @@ public class FF2J {
 		return this;
 	}
 
+	public Exception getError() {
+		return error;
+	}
+
 	/**
      * Process each line of the file and call an entity handler if that line can be mapped to an entity.
      *
      * @param input will not be closed by the reader
      */
-    public Statistics parse(Reader input) throws Exception {
-    	// pre parse
+    public Statistics parse(Reader input) {    	
+    	// pre parse    	
     	createEntityHandlersCache();
     	for (EntityHandler<?> entityHandler : entityHandlers) {
     		entityHandler.beforeFirstEntity();
+    	}    	
+    	if (progressListener != null) {
+    		progressListener.started();
     	}
+
     	statistics.startTime = System.currentTimeMillis();
     			
     	// parse
+    	boolean success = true;
         BufferedReader reader = new BufferedReader(input);
         String lineText = null;
         long lineNumber = 0;
-        while ((lineText = reader.readLine()) != null) {
-        	lineNumber++;
-        	if (lineNumber > skipLines) {
-        		boolean stop = onFileLine(lineNumber, lineText);
-        		if (stop) {
-        			break;
-        		}
-        	}
+        try {
+	        while ((lineText = reader.readLine()) != null) {
+	        	lineNumber++;
+	        	if (lineNumber > skipLines) {
+	        		boolean goNext = true;
+	        		if (progressListener != null) {
+	        			goNext = progressListener.inProgress(lineNumber);
+	        		}
+	        		if (goNext) {
+	        			goNext = onFileLine(lineNumber, lineText);
+	        		}
+	        		
+	        		if (!goNext) {
+	        			success = false;
+	        			break;
+	        		}
+	        	}
+	        }
+        } catch (Exception e) {
+        	success = false;
+        	error = e;
         }
         
         // post parse
@@ -137,6 +167,9 @@ public class FF2J {
         statistics.endTime = System.currentTimeMillis();
     	for (EntityHandler<?> entityHandler : entityHandlers) {
     		entityHandler.afterLastEntity();
+    	}
+    	if (progressListener != null) {
+    		progressListener.ended(success);
     	}
     	
     	return statistics;
@@ -212,14 +245,14 @@ public class FF2J {
 		}
 
 		/**
-		 * Returns elapsed miliseconds as sting in format HH:mm:ss.SSS.
+		 * Returns elapsed milliseconds as sting in format HH:mm:ss.SSS.
 		 * 
 		 * @return
 		 */
 		public String getElapsedTimeString() {
 			long timeInMillis = getElapsedTime();
 			
-			// format millis			
+			// format milliseconds			
 			long hours = TimeUnit.MILLISECONDS.toHours(timeInMillis);
 			timeInMillis -= TimeUnit.HOURS.toMillis(hours);
 			long minutes = TimeUnit.MILLISECONDS.toMinutes(timeInMillis);
